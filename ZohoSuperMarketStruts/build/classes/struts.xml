@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+	"http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.mapper.class"
+		value="com.crm.action.CustomActionMapper" />
+
+	<constant name="struts.multipart.saveDir"
+		value="/home/test-1/Music" />
+
+	<package name="apiaction1" namespace="/demo"
+		extends="json-default">
+
+		<interceptors>
+			<interceptor name="validationInterceptor" class="com.crm.validation.ValidationInterceptor" />
+			
+			<interceptor-stack name="defaultStack">
+				<interceptor-ref name="validationInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+			
+		</interceptors>
+
+		<global-results>
+			<result name="error" type="json">
+				<param name="root">jsonResponse</param>
+			</result>
+		</global-results>
+
+		<action name="Zoho" class="com.crm.action.SMRouteAction">
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="json">
+				<param name="root">jsonResponse</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">jsonResponse</param>
+			</result>
+		</action>
+	</package>
+
+	<package name="filestore" namespace="/zoho" extends="struts-default">
+		<action name="upload" class="com.crm.action.FileUploadAction">
+		
+			<interceptor-ref name="fileUpload">
+				<param name="maximumSize">2097152</param> <!-- 2MB -->
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack" />
+			
+			<result name="success">
+				<param name="root">res</param>
+			</result>
+			
+			<result name="error">
+				<param name="root">res</param>
+			</result>
+		</action>
+
+		<action name="fileDownload"
+			class="com.crm.action.FileUploadAction" method="getImage">
+			<result name="success" type="stream">
+				<param name="inputName">inputStream</param>
+				<param name="contentType">image/jpeg</param>
+				<param name="contentDisposition">inline;filename="${fileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+
+			<result name="error">
+				<param name="root">res</param>
+			</result>
+		</action>
+	</package>
+</struts>

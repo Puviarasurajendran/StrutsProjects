@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+	"http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+
+	<package name="default" namespace="/struts/api/*"
+		extends="json-default">
+
+	 	<interceptors>
+			<interceptor name="globalExceptionInterceptor"
+				class="resterrorhandling.GlobalExceptionInterceptor" />
+			<interceptor-stack name="defaultStack">
+				<interceptor-ref name="globalExceptionInterceptor" />
+			<interceptor-ref name="json">
+					<param name="root">customer</param>
+				</interceptor-ref> 
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+
+			<global-results>
+				<result name="error" type="json">
+					<param name="root">result</param>
+				</result>
+			</global-results> 
+
+			<action name="customers"
+				class="restaction.CustomersRestAction">
+				<interceptor-ref name="defaultStack" />
+				
+				<result name="success" type="json">
+					<param name="root">cutomersList</param>
+				</result>
+				<result name="input" type="json">
+					<param name="root">result</param>
+				</result>
+				<result name="error" type="json">
+					<param name="root">result</param>
+				</result>
+			</action>
+
+	</package>
+
+</struts>
+	

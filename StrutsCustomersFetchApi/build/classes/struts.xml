@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+	"http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+     	<constant name="struts.devMode" value="true" /> 
+     	
+	<package name="default" namespace="/customer"
+		extends="json-default">
+		<action name="getAllCustomers" class="action.CustomersAction"
+			method="getAllCustomers">
+			<result type="json">
+				<param name="root">customers</param>
+			</result>
+		</action>
+
+		<action name="getCustomer" class="action.CustomersAction"
+			method="getCustomerById">
+			<result type="json">
+				<param name="root">customer</param>
+			</result>
+			<result name="error" type="json">
+				<param name="root">actionErrors</param>
+			</result>
+		</action>
+
+		<action name="createCustomer" class="action.CustomersAction"
+			method="createCustomer">
+		    <interceptor-ref name="json" >
+		         <param  name="root">customer</param>
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack"/>
+            <result name="success" type="json">
+            <param name="root">customer</param>
+            </result>
+            <result name="error" type="json">
+                <param name="root">actionErrors</param>
+            </result>
+		</action>
+
+		<action name="updateCustomer" class="action.CustomersAction"
+			method="updateCustomer">
+			  <interceptor-ref name="json" >
+		         <param  name="root">customer</param>
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack"/>
+			<result type="json" />
+		</action>
+
+		<action name="deleteCustomer" class="action.CustomersAction"
+			method="deleteCustomer">
+			<param name="cid">${cid}</param>
+			<param name="ignoreHierarchy">true</param>
+			<result type="json" />
+		</action>
+	</package>
+	
+	    <package name="versionapi" namespace="/api/*" extends="json-default">
+        <action name="Customers" class="action.RouteApiAction">
+            <result name="success" type="json">
+            	<param name="root">customers</param>
+			</result>
+            </action>
+    </package>
+
+
+</struts>    
